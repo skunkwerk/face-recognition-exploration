@@ -1,34 +1,19 @@
 from PIL import Image, ImageOps
-import glob, os
 
-def convert_to_grayscale(filename):
+import logging
+
+logger = logging.getLogger()
+logger.addHandler(logging.StreamHandler())
+logger.setLevel(logging.DEBUG)
+
+def convert(path, new_path, resolution, depth):
 	"""
 	"""
 	try:
-		img = Image.open('test.jpg').convert('L')
-		img.save('gray.jpg')
+		#logger.debug('converting image: ' + path)
+		#logger.debug('saving to: ' + new_path)
+		im = ImageOps.posterize(Image.open(path).convert('L'), depth)
+		im.thumbnail((resolution, resolution))
+		im.save(new_path)
 	except Exception as e:
 		logger.error(e, exc_info=True)
-
-def downsize():
-	"""
-	"""
-	try:
-		im = Image.open('test.jpg')
-		im.thumbnail((128, 128))
-		im.save("test_thumbnail.jpg")
-	except Exception as e:
-		logger.error(e, exc_info=True)
-
-def downsample():
-	"""
-	"""
-	try:
-		im = ImageOps.posterize(Image.open('test.jpg').convert('L'), 5)
-		im.save("test_depth_thumbnail.jpg")
-	except Exception as e:
-		logger.error(e, exc_info=True)
-
-#convert_to_grayscale()
-#downsize()
-downsample()
