@@ -12,3 +12,8 @@ To run:
 3)  Put your AWS credentials into process.py
 
 4)  $ python process.py
+
+TODOS:
+
+1)  k-fold cross-validation
+2)  plotting results with plot.ly
