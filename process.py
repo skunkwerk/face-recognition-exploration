@@ -15,10 +15,12 @@ from concurrent.futures import ThreadPoolExecutor
 import boto3
 
 from image_processing import *
-from train_test import *
+#from train_test import *
+
+#botocore.errorfactory.ProvisionedThroughputExceededException: An error occurred (ProvisionedThroughputExceededException) when calling the CreateCollection operation: Provisioned rate exceeded
 
 # CHANGE THIS SETTING TO BE COMPREHENSIVE (SLOW) OR SMALL (FAST)
-RUN_TYPE = 'SMALL'
+RUN_TYPE = 'COMPREHENSIVE'
 
 if RUN_TYPE=='COMPREHENSIVE':
 	params = {'resolution': [240, 160, 80],#, 40],
@@ -54,8 +56,10 @@ elif RUN_TYPE=='SMALL':
 	{'resolution': 80, 'bit_depth': 3, 'number_faces': 100, 'number_training_images': 2},
 	{'resolution': 80, 'bit_depth': 3, 'number_faces': 100, 'number_training_images': 3}]
 
-rekognition = boto3.client('rekognition', aws_access_key_id='REPLACE_ME',
-	aws_secret_access_key='REPLACE_ME')
+#rekognition = boto3.client('rekognition', aws_access_key_id='REPLACE_ME',
+#	aws_secret_access_key='REPLACE_ME')
+rekognition = boto3.client('rekognition', aws_access_key_id='AKIAI6PWF4N4V4BOTHIQ',
+	aws_secret_access_key='0NZjIyxgOlQDu7g1LzPfe3KGhXfWDxnXTpkAI5gi')
 
 def select_faces():
 	"""
@@ -116,9 +120,9 @@ def run_sweep_parameters(selected_faces):
 			faces = selected_faces[:batch['number_faces']]
 			process_images(batch, faces)
 		
-		with ThreadPoolExecutor(max_workers=20) as executor:
+		with ThreadPoolExecutor(max_workers=25) as executor:
 			results = executor.map(train_and_test, parameter_batches)
-		all_results = {result['key']: result['values'] for result in results}
+		all_results = {result['key']: result['values'] for result in results if result}
 		return all_results
 	except Exception as e:
 		logger.error(e, exc_info=True)
@@ -153,7 +157,7 @@ def train_and_test(params):
 	secret: lWckA6amTi96tymIDBYsMaxSfAPacJ_0
 	"""
 	try:
-		key = 'round_7' + '_'.join(['resolution',str(params['resolution']),'bit_depth',str(params['bit_depth']),'number_faces',str(params['number_faces']),'number_training_images',str(params['number_training_images'])])
+		key = 'round_8' + '_'.join(['resolution',str(params['resolution']),'bit_depth',str(params['bit_depth']),'number_faces',str(params['number_faces']),'number_training_images',str(params['number_training_images'])])
 		#key = 'test12'
 		logger.debug('collection: ' + key)
 		response = rekognition.create_collection(CollectionId=key)
@@ -183,7 +187,8 @@ def train_and_test(params):
 			if RUN_TYPE=='SMALL':
 				testing[item] = values[number_training:number_training+1] # to speed things up, we only test with a single image per face, not all of them
 			else:
-				testing[item] = values[number_training:]
+				#testing[item] = values[number_training:]
+				testing[item] = values[number_training:number_training+1]
 
 		# add training images
 		for name, values in training.items():
