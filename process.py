@@ -56,10 +56,21 @@ elif RUN_TYPE=='SMALL':
 	{'resolution': 80, 'bit_depth': 3, 'number_faces': 100, 'number_training_images': 2},
 	{'resolution': 80, 'bit_depth': 3, 'number_faces': 100, 'number_training_images': 3}]
 
-#rekognition = boto3.client('rekognition', aws_access_key_id='REPLACE_ME',
-#	aws_secret_access_key='REPLACE_ME')
-rekognition = boto3.client('rekognition', aws_access_key_id='AKIAI6PWF4N4V4BOTHIQ',
-	aws_secret_access_key='0NZjIyxgOlQDu7g1LzPfe3KGhXfWDxnXTpkAI5gi')
+"""elif RUN_TYPE=='REMAINING':
+	parameter_batches = [
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 600, 'number_training_images': 1},
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 300, 'number_training_images': 3},
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 300, 'number_training_images': 2},
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 300, 'number_training_images': 1},
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 100, 'number_training_images': 3},
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 100, 'number_training_images': 2},
+	{'resolution': 240, 'bit_depth': 6, 'number_faces': 100, 'number_training_images': 1},
+	{'resolution': 240, 'bit_depth': 5, 'number_faces': 600, 'number_training_images': 3},
+	{'resolution': 240, 'bit_depth': 5, 'number_faces': 600, 'number_training_images': 2},
+	{'resolution': 240, 'bit_depth': 4, 'number_faces': 300, 'number_training_images': 3}]"""
+
+rekognition = boto3.client('rekognition', aws_access_key_id='REPLACE_ME',
+	aws_secret_access_key='REPLACE_ME')
 
 def select_faces():
 	"""
@@ -157,7 +168,7 @@ def train_and_test(params):
 	secret: lWckA6amTi96tymIDBYsMaxSfAPacJ_0
 	"""
 	try:
-		key = 'round_8' + '_'.join(['resolution',str(params['resolution']),'bit_depth',str(params['bit_depth']),'number_faces',str(params['number_faces']),'number_training_images',str(params['number_training_images'])])
+		key = 'round_9' + '_'.join(['resolution',str(params['resolution']),'bit_depth',str(params['bit_depth']),'number_faces',str(params['number_faces']),'number_training_images',str(params['number_training_images'])])
 		#key = 'test12'
 		logger.debug('collection: ' + key)
 		response = rekognition.create_collection(CollectionId=key)
